@@ -7,7 +7,7 @@ description: Analyze Android apps (APK, installed apps, Flutter, React Native, U
 
 REA (Reverse Engineer Anything, github.com/morluto/rea) is an MCP server with static analysis tools: JADX for
 Java/Kotlin, apktool for resources, Flutter/Dart snapshot facts, objdump and rizin for native code, adb for the
-phone. In AntiGem it runs in a proot-distro Ubuntu container of the terminal, or, when the phone runs AntiGem's
+phone. In Agent Hina it runs in a proot-distro Ubuntu container of the terminal, or, when the phone runs Agent Hina's
 Ubuntu chroot (rooted phones; you are then in a normal Ubuntu without `$PREFIX`), right in that chroot. Either way
 agents reach it through the `rea-mcp` launcher (in the chroot `/usr/local/bin/rea-mcp`). Only analyze apps and files
 the user owns or is allowed to analyze.

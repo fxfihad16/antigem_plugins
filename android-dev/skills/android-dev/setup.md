@@ -1,17 +1,17 @@
 # Setting up Android development
 
-**AntiGem's Ubuntu chroot (rooted phones):** when the phone runs it, you are in a normal Ubuntu (no `$PREFIX`, no
+**Agent Hina's Ubuntu chroot (rooted phones):** when the phone runs it, you are in a normal Ubuntu (no `$PREFIX`, no
 proot) and everything installs right into it, no container: the same script runs as root with
-`ANTIGEM_RUNTIME=chroot` (Settings → Android Development does it and copies the scripts to
-`/opt/antigem/share/antigem-android`; from the terminal, after asking the user:
-`sudo env ANTIGEM_RUNTIME=chroot bash /opt/antigem/share/antigem-android/android-setup.sh kotlin`). There: tools and
-the SDK in `/opt/antigem` (the SDK and Flutter belong to the user, so builds can write in them), `adev` and
+`HINA_RUNTIME=chroot` (Settings → Android Development does it and copies the scripts to
+`/opt/hina/share/hina-android`; from the terminal, after asking the user:
+`sudo env HINA_RUNTIME=chroot bash /opt/hina/share/hina-android/android-setup.sh kotlin`). There: tools and
+the SDK in `/opt/hina` (the SDK and Flutter belong to the user, so builds can write in them), `adev` and
 `adev-new` in `/usr/local/bin`, Gradle settings in the user's `~/.gradle`, projects in `~/AndroidProjects` (any
 folder of the home works, not /sdcard). Ubuntu's own arm64 `aapt2`, `adb`, `fastboot` (no sudo needed) and
-`qemu-user` replace Termux's. The `container` step does nothing there. The rest of this file describes AntiGem's
+`qemu-user` replace Termux's. The `container` step does nothing there. The rest of this file describes Agent Hina's
 terminal (Termux): the paths there (`$PREFIX`, `/root/...`) differ.
 
-Everything runs in the proot-distro Ubuntu 24.04 container named `ubuntu` inside AntiGem's terminal (com.termux
+Everything runs in the proot-distro Ubuntu 24.04 container named `ubuntu` inside Agent Hina's terminal (com.termux
 builds only). REA uses the same container: Java 21 and Node.js installed for one are reused by the other.
 
 The easy way is **Settings → Android Development** in the app: the user picks Kotlin / Java, Flutter and/or React
@@ -26,12 +26,12 @@ long steps one at a time so a failure is easy to see, with a long timeout (30 mi
 
 The script ships with this skill: `scripts/android-setup.sh` in this skill's detail folder (`get_skill` returns
 `detail_dir`; the full path is `<detail_dir>/scripts/android-setup.sh`). Once installed it is also at
-`$PREFIX/share/antigem-android/android-setup.sh`. If neither is reachable, download the scripts:
+`$PREFIX/share/hina-android/android-setup.sh`. If neither is reachable, download the scripts:
 
 ```sh
-mkdir -p $PREFIX/share/antigem-android && cd $PREFIX/share/antigem-android
+mkdir -p $PREFIX/share/hina-android && cd $PREFIX/share/hina-android
 for f in files.json android-setup.sh adev adev-new; do
-  curl -fsSLO https://raw.githubusercontent.com/Santoshkurmi/antigem_plugins/main/android-dev/skills/android-dev/scripts/$f
+  curl -fsSLO https://raw.githubusercontent.com/fxfihad16/antigem_plugins/main/android-dev/skills/android-dev/scripts/$f
 done
 ```
 
@@ -57,7 +57,7 @@ Shortcuts: `kotlin` = container base java sdk launcher; `flutter-all` = kotlin +
 Recommended sequence (check each step's last line: `✓` is success, `✗` names the problem):
 
 ```sh
-S=$PREFIX/share/antigem-android        # or the skill's scripts folder
+S=$PREFIX/share/hina-android        # or the skill's scripts folder
 bash $S/android-setup.sh kotlin        # container base java sdk launcher
 bash $S/android-setup.sh flutter flutter-release   # only for Flutter
 bash $S/android-setup.sh node ndk      # only for React Native
@@ -75,7 +75,7 @@ bash $S/android-setup.sh test compose  # creates ~/AndroidProjects/hello-compose
   a link to it too.
 - Command-line tools are pinned to 21.0: from 22.0 on, `sdkmanager` is a wrapper around a native `android` binary
   that only exists for x86_64.
-- arm64-v8a only: `/root/.gradle/init.d/antigem-arm64.gradle` sets `abiFilters = arm64-v8a` on every Android
+- arm64-v8a only: `/root/.gradle/init.d/hina-arm64.gradle` sets `abiFilters = arm64-v8a` on every Android
   module (through `androidComponents.finalizeDsl`) and keeps `.so` files unstripped (stripping needs Google's x86
   NDK); `reactNativeArchitectures=arm64-v8a` for React Native; the flutter step puts a `flutter` wrapper in
   `/root/tools/adev-bin` (first on PATH) that adds `--target-platform android-arm64` to `flutter build`.
@@ -96,6 +96,6 @@ bash $S/android-setup.sh test compose  # creates ~/AndroidProjects/hello-compose
 
 ## Notes
 
-- `proot-distro login ubuntu` opens the container by hand; `/etc/profile.d/antigem-android.sh` sets the same PATH
+- `proot-distro login ubuntu` opens the container by hand; `/etc/profile.d/hina-android.sh` sets the same PATH
   there for login shells.
 - If `apt` reports a lock, another install is running (maybe REA's, or the app's). Wait; never delete lock files.

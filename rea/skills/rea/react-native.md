@@ -12,7 +12,7 @@ head -c 8 assets/index.android.bundle | od -An -tx1
 
 ## Hermes bytecode (most apps since React Native 0.70)
 
-REA has no Hermes decompiler. AntiGem's setup step `hermes` installs **hermes-dec** in the REA container (check:
+REA has no Hermes decompiler. Agent Hina's setup step `hermes` installs **hermes-dec** in the REA container (check:
 `rea-shell 'command -v hbc-decompiler'`; if missing, suggest Settings → REA → React Native (hermes-dec), or
 `bash <setup>/rea-setup.sh hermes`). Run it through `rea-shell` from the folder with the bundle:
 

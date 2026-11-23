@@ -1,11 +1,11 @@
 ---
-name: Browser automation in AntiGem's browser
-description: Do tasks on websites in AntiGem's built-in browser with the browser_mcp tools (browser_*). Lock the tab, find elements by ref, click, type and fill forms, search sites, read pages, and handle dialogs, popups, new tabs and errors quickly and reliably.
+name: Browser automation in Agent Hina's browser
+description: Do tasks on websites in Agent Hina's built-in browser with the browser_mcp tools (browser_*). Lock the tab, find elements by ref, click, type and fill forms, search sites, read pages, and handle dialogs, popups, new tabs and errors quickly and reliably.
 ---
 
-# Browser automation in AntiGem's browser
+# Browser automation in Agent Hina's browser
 
-The `browser_*` tools (MCP server `browser_mcp`) drive AntiGem's built-in browser like a person would. They send
+The `browser_*` tools (MCP server `browser_mcp`) drive Agent Hina's built-in browser like a person would. They send
 real taps and keystrokes, read the page, and take screenshots. **Follow this guide**: it is the fast, reliable way
 to use them. Read a detail file when your task needs it.
 
@@ -21,8 +21,8 @@ Detail files (read with `get_skill_file`, name `browser_skill`):
 You need tools named `browser_open_url`, `browser_find`, `browser_computer`, `browser_lock`, and so on. If they are
 missing, stop and tell the user how to add the **Browser Automation** MCP:
 
-- Antigravity: AntiGem → Settings → MCP Servers & Tools → Quick Presets → "Browser Automation" → save.
-- Claude Code / Codex / OpenCode: AntiGem → Settings → that agent's MCP page → "Browser Automation" preset.
+- Antigravity: Agent Hina → Settings → MCP Servers & Tools → Quick Presets → "Browser Automation" → save.
+- Claude Code / Codex / OpenCode: Agent Hina → Settings → that agent's MCP page → "Browser Automation" preset.
 - Then reload the tools or start a new chat.
 
 ## 1. The loop: lock → look → act → check → unlock

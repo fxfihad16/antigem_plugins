@@ -1,5 +1,5 @@
 #!/bin/bash
-# AntiGem · REA MCP server in AntiGem's Ubuntu chroot (rooted phones). REA runs right here, no container, and speaks
+# Agent Hina · REA MCP server in Agent Hina's Ubuntu chroot (rooted phones). REA runs right here, no container, and speaks
 # MCP over stdio, showing only the tools of the groups in REA_GROUPS. Same commands and settings as the Termux
 # launcher (rea-mcp):
 #
@@ -8,14 +8,14 @@
 #   rea-mcp --doctor      run `rea doctor` (which tools and engines are ready)
 #
 # Environment (set in the MCP server's env): REA_GROUPS, REA_MODE, REA_DIRECT_GROUPS, REA_MCP_OUTPUT_SCHEMA_PROFILE
-# (see rea-mcp). The tool groups are the user's own: ~/.config/antigem/rea/groups.json.
+# (see rea-mcp). The tool groups are the user's own: ~/.config/hina/rea/groups.json.
 #
-# Installed by rea-setup.sh (step "launcher", run with ANTIGEM_RUNTIME=chroot) as /usr/local/bin/rea-mcp.
-T=/opt/antigem/tools
-S=/opt/antigem/share/antigem-rea
+# Installed by rea-setup.sh (step "launcher", run with HINA_RUNTIME=chroot) as /usr/local/bin/rea-mcp.
+T=/opt/hina/tools
+S=/opt/hina/share/hina-rea
 
 if [ ! -x "$T/node/bin/node" ] || [ ! -f "$S/rea-filter.mjs" ]; then
-    echo "rea-mcp: REA is not installed in this Ubuntu. Install it in AntiGem Settings → REA." >&2
+    echo "rea-mcp: REA is not installed in this Ubuntu. Install it in Agent Hina Settings → REA." >&2
     exit 1
 fi
 
@@ -26,7 +26,7 @@ envs=(
     "REA_GROUPS=${REA_GROUPS:-all}"
     "REA_MODE=${REA_MODE:-direct}"
     "REA_DIRECT_GROUPS=${REA_DIRECT_GROUPS:-}"
-    "REA_GROUPS_FILE=$H/.config/antigem/rea/groups.json"
+    "REA_GROUPS_FILE=$H/.config/hina/rea/groups.json"
     REA_JADX_MCP_JAR=$T/jadx-headless-mcp-0.7.1-all.jar
     REA_APKTOOL_COMMAND=/usr/local/bin/apktool
     REA_BINWALK_COMMAND=/usr/bin/binwalk

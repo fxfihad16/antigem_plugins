@@ -1,14 +1,14 @@
-# AntiGem plugins
+# Agent Hina plugins
 
-Plugins for [AntiGem](https://github.com/Santoshkurmi/antigem). AntiGem adds this repository to
-**Settings → Custom AntiGem Plugins → Repositories** by default (once; add `Santoshkurmi/antigem_plugins` again
+Plugins for [Agent Hina](https://github.com/fxfihad16/AgentHina). Agent Hina adds this repository to
+**Settings → Custom Agent Hina Plugins → Repositories** by default (once; add `fxfihad16/antigem_plugins` again
 there if you removed it). Install a plugin from the list; updates show up there when a plugin's version goes up.
 
 | Plugin | What it is |
 | --- | --- |
 | [`rea`](rea/) | Skills-only plugin for **REA** (Reverse Engineer Anything): teaches agents to set up REA, check its MCP server and analyze APKs, installed apps, Flutter, React Native and native code. Also holds REA's setup scripts. |
 | [`android-dev`](android-dev/) | Skills-only plugin for **building Android apps on the phone**: Kotlin / Java with Jetpack Compose, Flutter and React Native, in the same proot-distro Ubuntu container as REA. Teaches agents to check and install the tools, create projects, build and install APKs. Also holds the setup scripts. |
-| [`browser_skill`](browser_skill/) | Skills-only plugin for **AntiGem's built-in browser**: teaches agents to use the Browser Automation MCP (`browser_*` tools) well: lock the tab while working, find elements by ref, click / type / fill forms, search sites, read pages, handle dialogs, popups, new tabs and errors. |
+| [`browser_skill`](browser_skill/) | Skills-only plugin for **Agent Hina's built-in browser**: teaches agents to use the Browser Automation MCP (`browser_*` tools) well: lock the tab while working, find elements by ref, click / type / fill forms, search sites, read pages, handle dialogs, popups, new tabs and errors. |
 | [`clippolish`](clippolish/) | Skills-only plugin for **ClipPolish** (screen recorder + video editor app): teaches agents to connect to its MCP server and use it well: polish screen recordings (zooms, captions, privacy blur, styles, export), make studio videos from scenes, pictures, text and animation timed to a transcript, and write or install ClipPolish plugins. |
 
 ## REA
@@ -31,7 +31,7 @@ rea/
 ```
 
 The app does not ship any of this: **Settings → REA → Get setup files** downloads `scripts/` (from
-`raw.githubusercontent.com/<repo>/<branch>/rea/skills/rea/scripts/`) into `$PREFIX/share/antigem-rea/`, and every
+`raw.githubusercontent.com/<repo>/<branch>/rea/skills/rea/scripts/`) into `$PREFIX/share/hina-rea/`, and every
 install button runs `rea-setup.sh <step>`. Agents using the skill run the same script from the installed plugin.
 
 ### Releasing a change
@@ -39,7 +39,7 @@ install button runs `rea-setup.sh <step>`. Agents using the skill run the same s
 1. Change the files.
 2. Scripts changed → raise `version` in `rea/skills/rea/scripts/files.json` (the app offers "Update to vX").
 3. Skills or scripts changed → raise `version` in `rea/manifest.json` **and** the same version in
-   `antigem-plugins.json` (the plugin list offers the update).
+   `hina-plugins.json` (the plugin list offers the update).
 4. Commit and push to `main`.
 
 ### Testing a script change before pushing
@@ -70,9 +70,9 @@ android-dev/
         adev-new            ← creates a hello-world Compose / Flutter / React Native project
 ```
 
-The app downloads `scripts/` into `$PREFIX/share/antigem-android/` and every install button runs
+The app downloads `scripts/` into `$PREFIX/share/hina-android/` and every install button runs
 `android-setup.sh <step>`; the test builds run `android-setup.sh test compose|flutter|rn`. Releasing works as for
-REA: raise `scripts/files.json`'s version when scripts change, and `manifest.json` + `antigem-plugins.json` when
+REA: raise `scripts/files.json`'s version when scripts change, and `manifest.json` + `hina-plugins.json` when
 anything changes.
 
 The template's versions are pinned in `adev-new` (tested on a phone); `adev-new compose … --latest` tries the
@@ -94,7 +94,7 @@ browser_skill/
 
 No scripts: the tools are built into the app (MCP endpoint `/browser`, preset "Browser Automation"). When the tools
 change (new tools, renamed parameters, different messages), update the skill to match, then raise the version in
-`manifest.json` and `antigem-plugins.json`.
+`manifest.json` and `hina-plugins.json`.
 
 ## ClipPolish
 
@@ -114,4 +114,4 @@ clippolish/
 
 No scripts: the tools are served by the ClipPolish app (AI access → MCP server, `http://127.0.0.1:<port>/mcp` with
 `Authorization: Bearer <key>`). When ClipPolish's MCP tools change (new tools, renamed parameters, new studio
-features), update the skill to match, then raise the version in `manifest.json` and `antigem-plugins.json`.
+features), update the skill to match, then raise the version in `manifest.json` and `hina-plugins.json`.

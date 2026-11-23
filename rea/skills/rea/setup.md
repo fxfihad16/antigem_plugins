@@ -1,29 +1,29 @@
 # Setting up REA
 
-REA runs in a proot-distro Ubuntu 24.04 container named `ubuntu` inside AntiGem's terminal (com.termux builds).
+REA runs in a proot-distro Ubuntu 24.04 container named `ubuntu` inside Agent Hina's terminal (com.termux builds).
 The easy way is **Settings → REA · Reverse Engineering** in the app: it installs the same steps below with
 buttons, one part at a time or several together, and adds the MCP server. Suggest that first.
 
 If the user prefers, install from the terminal. **Ask before installing**: the APK-analysis set needs about 1 GB
 and takes 5–15 minutes depending on the network. Run long steps one at a time so a failure is easy to see.
 
-## In AntiGem's Ubuntu chroot (rooted phones)
+## In Agent Hina's Ubuntu chroot (rooted phones)
 
-When the phone runs AntiGem's Ubuntu chroot, you are in a normal Ubuntu (no `$PREFIX`, no proot) and REA installs
-right into it: no container. The same script runs as root with `ANTIGEM_RUNTIME=chroot`; Settings → REA does this
-for the user, and copies the scripts to `/opt/antigem/share/antigem-rea`. From the terminal (it needs root, so ask
+When the phone runs Agent Hina's Ubuntu chroot, you are in a normal Ubuntu (no `$PREFIX`, no proot) and REA installs
+right into it: no container. The same script runs as root with `HINA_RUNTIME=chroot`; Settings → REA does this
+for the user, and copies the scripts to `/opt/hina/share/hina-rea`. From the terminal (it needs root, so ask
 the user first):
 
 ```sh
-sudo env ANTIGEM_RUNTIME=chroot bash /opt/antigem/share/antigem-rea/rea-setup.sh android
+sudo env HINA_RUNTIME=chroot bash /opt/hina/share/hina-rea/rea-setup.sh android
 ```
 
-Where things are there: tools in `/opt/antigem/tools` (Node.js, the JADX and apktool jars, hermes-dec), the
+Where things are there: tools in `/opt/hina/tools` (Node.js, the JADX and apktool jars, hermes-dec), the
 commands `rea-mcp`, `rea-shell` and `apktool` in `/usr/local/bin`, the tool groups in the user's own
-`~/.config/antigem/rea/groups.json`. The `container` step does nothing there; `native` installs objdump and rizin
+`~/.config/hina/rea/groups.json`. The `container` step does nothing there; `native` installs objdump and rizin
 (rizin from the rizin project's own Ubuntu repository: Ubuntu has no package), `adb` installs Ubuntu's adb and
 fastboot (they work without sudo). The MCP server command is `/usr/local/bin/rea-mcp`. Everything below about
-`$PREFIX` and proot-distro is for AntiGem's terminal (Termux) only.
+`$PREFIX` and proot-distro is for Agent Hina's terminal (Termux) only.
 
 ## The setup script
 
@@ -32,9 +32,9 @@ The script ships with this skill: `scripts/rea-setup.sh` in this skill's detail 
 terminal, download the scripts:
 
 ```sh
-mkdir -p $PREFIX/share/antigem-rea && cd $PREFIX/share/antigem-rea
+mkdir -p $PREFIX/share/hina-rea && cd $PREFIX/share/hina-rea
 for f in files.json rea-setup.sh rea-mcp rea-shell rea-filter.mjs groups.default.json; do
-  curl -fsSLO https://raw.githubusercontent.com/Santoshkurmi/antigem_plugins/main/rea/skills/rea/scripts/$f
+  curl -fsSLO https://raw.githubusercontent.com/fxfihad16/antigem_plugins/main/rea/skills/rea/scripts/$f
 done
 ```
 

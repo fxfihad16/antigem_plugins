@@ -6,7 +6,7 @@
 termux-open ~/AndroidProjects/notes/app/build/outputs/apk/debug/app-debug.apk
 ```
 
-AntiGem opens Android's package installer; the user taps Install. The first time Android asks to allow AntiGem to
+Agent Hina opens Android's package installer; the user taps Install. The first time Android asks to allow Agent Hina to
 install apps. Tell the user to confirm on screen. You cannot start the app or read its logs this way.
 
 Settings → Android Development also has Install buttons for its test apps.
@@ -35,5 +35,5 @@ adb exec-out screencap -p > ~/shot.png                        # screenshot, then
   through its keys), so prefer `flutter build apk --debug` + `adb install` in an agent.
 - React Native debug APKs load JavaScript from Metro on port 8081 (`react-native.md`); a release build bundles it.
 
-If the phone has Android Automation enabled in AntiGem, its MCP tools can also tap through the installed app to
+If the phone has Android Automation enabled in Agent Hina, its MCP tools can also tap through the installed app to
 check that it works.

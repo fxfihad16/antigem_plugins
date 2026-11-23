@@ -1,5 +1,5 @@
 #!/data/data/com.termux/files/usr/bin/bash
-# AntiGem · run a command in the Ubuntu container with the Android tools on PATH: java, sdkmanager, gradle (through
+# Agent Hina · run a command in the Ubuntu container with the Android tools on PATH: java, sdkmanager, gradle (through
 # ./gradlew), flutter, dart, node, npm, npx, adb. Paths under the Termux home work the same inside.
 #
 #   adev                                 interactive shell in the container
@@ -15,7 +15,7 @@ C="${ADEV_CONTAINER:-ubuntu}"
 SDK=/root/android-sdk
 
 if [ ! -d "$P/var/lib/proot-distro/containers/$C/rootfs/usr" ]; then
-    echo "adev: the '$C' container is not installed (AntiGem Settings → Android Development, or: bash $P/share/antigem-android/android-setup.sh kotlin)." >&2
+    echo "adev: the '$C' container is not installed (Agent Hina Settings → Android Development, or: bash $P/share/hina-android/android-setup.sh kotlin)." >&2
     exit 1
 fi
 

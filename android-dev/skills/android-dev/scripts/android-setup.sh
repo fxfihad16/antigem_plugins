@@ -1,43 +1,43 @@
 #!/data/data/com.termux/files/usr/bin/bash
-# AntiGem · Android development setup (Kotlin / Jetpack Compose, Flutter, React Native) for Termux + proot-distro
-# Ubuntu. AntiGem's Settings → Android Development runs these steps; you (or an agent) can run them in the terminal.
+# Agent Hina · Android development setup (Kotlin / Jetpack Compose, Flutter, React Native) for Termux + proot-distro
+# Ubuntu. Agent Hina's Settings → Android Development runs these steps; you (or an agent) can run them in the terminal.
 #
 #   bash android-setup.sh help                list the steps
 #   bash android-setup.sh kotlin              everything for Kotlin / Java / Compose apps
 #   bash android-setup.sh container base java any steps, in the order given
 #
 # It shares the 'ubuntu' container (and Java 21 and Node.js) with REA, so nothing is installed twice.
-# Source: antigem_plugins/android-dev/skills/android-dev/scripts/ (AntiGem downloads it into $PREFIX/share/antigem-android/).
+# Source: antigem_plugins/android-dev/skills/android-dev/scripts/ (Agent Hina downloads it into $PREFIX/share/hina-android/).
 set -uo pipefail
 
 say() { printf '==> %s\n' "$*"; }
 ok() { printf '✓ %s\n' "$*"; }
 die() { printf '✗ %s\n' "$*" >&2; exit 1; }
 
-# Where the tools run. In AntiGem's terminal (Termux): a proot-distro Ubuntu container. In AntiGem's Ubuntu chroot
-# (rooted phones): that Ubuntu itself, no container. There AntiGem runs this script inside the chroot as root with
-# ANTIGEM_RUNTIME=chroot and ANTIGEM_USER=<the chroot's user>: the tools go to /opt/antigem, the commands to
+# Where the tools run. In Agent Hina's terminal (Termux): a proot-distro Ubuntu container. In Agent Hina's Ubuntu chroot
+# (rooted phones): that Ubuntu itself, no container. There Agent Hina runs this script inside the chroot as root with
+# HINA_RUNTIME=chroot and HINA_USER=<the chroot's user>: the tools go to /opt/hina, the commands to
 # /usr/local/bin, Gradle's settings and the projects to the user's home, and the SDK and Flutter belong to the user
 # (Gradle and Flutter write into them while building). Ubuntu's own arm64 aapt2, adb, fastboot and qemu-user replace
 # Termux's builds.
-RUNTIME="${ANTIGEM_RUNTIME:-termux}"
+RUNTIME="${HINA_RUNTIME:-termux}"
 C="${ADEV_CONTAINER:-ubuntu}"
 IMAGE="${ADEV_IMAGE:-ubuntu:24.04}"
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 FILES="files.json android-setup.sh adev adev-new adev-chroot"
 if [ "$RUNTIME" = chroot ]; then
-    [ "$(id -u)" = 0 ] || die "In the Ubuntu chroot this script runs as root: sudo env ANTIGEM_RUNTIME=chroot bash $0 ${*:-help}"
-    U="${ANTIGEM_USER:-${SUDO_USER:-}}"
+    [ "$(id -u)" = 0 ] || die "In the Ubuntu chroot this script runs as root: sudo env HINA_RUNTIME=chroot bash $0 ${*:-help}"
+    U="${HINA_USER:-${SUDO_USER:-}}"
     UH=""
     [ -n "$U" ] && UH=$(getent passwd "$U" | cut -d: -f6)
     [ -n "$UH" ] || { U=""; UH=/root; }
     export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin DEBIAN_FRONTEND=noninteractive
     ROOTFS=""
-    T=/opt/antigem/tools
-    NVM_HOME=/opt/antigem/nvm
-    SHARE=/opt/antigem/share/antigem-android
+    T=/opt/hina/tools
+    NVM_HOME=/opt/hina/nvm
+    SHARE=/opt/hina/share/hina-android
     BIN=/usr/local/bin
-    SDK=/opt/antigem/android-sdk
+    SDK=/opt/hina/android-sdk
     GH="$UH/.gradle"
     PROJECTS="$UH/AndroidProjects"
     AAPT2=/usr/bin/aapt2
@@ -50,7 +50,7 @@ else
     ROOTFS="$P/var/lib/proot-distro/containers/$C/rootfs"
     T=/root/tools
     NVM_HOME=/root/.nvm
-    SHARE="$P/share/antigem-android"
+    SHARE="$P/share/hina-android"
     BIN="$P/bin"
     SDK=/root/android-sdk
     GH=/root/.gradle
@@ -134,7 +134,7 @@ need_in() { # need_in <path inside the container> <step that provides it>
 
 step_container() {
     if [ "$RUNTIME" = chroot ]; then
-        ok "The Android tools install straight into AntiGem's Ubuntu chroot: $(grep -m1 '^PRETTY_NAME=' /etc/os-release 2>/dev/null | cut -d'"' -f2)"
+        ok "The Android tools install straight into Agent Hina's Ubuntu chroot: $(grep -m1 '^PRETTY_NAME=' /etc/os-release 2>/dev/null | cut -d'"' -f2)"
         return 0
     fi
     command -v proot-distro >/dev/null 2>&1 || termux_install proot-distro
@@ -223,7 +223,7 @@ setp reactNativeArchitectures arm64-v8a
 # binutils do the job.
 N=$SDK/ndk-strip
 rm -rf \$N; mkdir -p \$N/meta \$N/toolchains/llvm/prebuilt/linux-x86_64/bin
-printf 'Pkg.Desc = Android NDK (AntiGem: strip only, arm64 GNU binutils)\nPkg.Revision = $STRIP_NDK_VERSION\n' > \$N/source.properties
+printf 'Pkg.Desc = Android NDK (Agent Hina: strip only, arm64 GNU binutils)\nPkg.Revision = $STRIP_NDK_VERSION\n' > \$N/source.properties
 cat > \$N/meta/abis.json <<'J'
 {
   \"armeabi-v7a\": {\"bitness\": 32, \"default\": true, \"deprecated\": false, \"proc\": \"armv7-a\", \"arch\": \"arm\", \"triple\": \"arm-linux-androideabi\", \"llvm_triple\": \"armv7-none-linux-androideabi\"},
@@ -235,10 +235,10 @@ J
 printf '{\"min\": 21, \"max\": 36, \"aliases\": {}}\n' > \$N/meta/platforms.json
 for t in strip objcopy readelf objdump nm; do ln -sf /usr/bin/\$t \$N/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-\$t; done
 mkdir -p \$N/build/cmake
-printf 'message(FATAL_ERROR \"This project compiles C/C++ code. Install the NDK first: AntiGem Settings > Android Development > C/C++ (NDK), or: bash \$PREFIX/share/antigem-android/android-setup.sh ndk\")\n' > \$N/build/cmake/android.toolchain.cmake
+printf 'message(FATAL_ERROR \"This project compiles C/C++ code. Install the NDK first: Agent Hina Settings > Android Development > C/C++ (NDK), or: bash \$PREFIX/share/hina-android/android-setup.sh ndk\")\n' > \$N/build/cmake/android.toolchain.cmake
 mkdir -p $GH/init.d
-cat > $GH/init.d/antigem-arm64.gradle <<'INIT'
-// AntiGem (android-setup.sh sdk): apps built on the phone are for the phone, so only arm64-v8a native code is
+cat > $GH/init.d/hina-arm64.gradle <<'INIT'
+// Agent Hina (android-setup.sh sdk): apps built on the phone are for the phone, so only arm64-v8a native code is
 // packaged. Google's NDK has no arm64 Linux build: every module uses the NDK the ndk step rebuilt on Ubuntu's arm64
 // LLVM ($SDK/ndk-arm64.txt), or without it a strip-only NDK ($SDK/ndk-strip: llvm-strip / llvm-objcopy are the
 // container's arm64 GNU binutils), so .so files are always stripped. ADEV_ALL_ABIS=1 turns this off; build other
@@ -262,7 +262,7 @@ if (System.getenv('ADEV_ALL_ABIS') != '1') {
                 def real = new File(f.path + '.x86_64')
                 real.delete()
                 f.renameTo(real)
-                f.text = '#!/bin/sh\n# AntiGem (android-setup.sh): the x86-64 hermesc through qemu\nexec ' + qemu.path + ' ' + real.path + ' \"\$@\"\n'
+                f.text = '#!/bin/sh\n# Agent Hina (android-setup.sh): the x86-64 hermesc through qemu\nexec ' + qemu.path + ' ' + real.path + ' \"\$@\"\n'
                 f.setExecutable(true)
             }
             // without it React Native says: OS not recognized (it does not know Linux on arm64)
@@ -288,7 +288,7 @@ if (System.getenv('ADEV_ALL_ABIS') != '1') {
 }
 INIT
 # A shell in the container (proot-distro login ubuntu) gets the same tools
-cat > /etc/profile.d/antigem-android.sh <<'PROFILE'
+cat > /etc/profile.d/hina-android.sh <<'PROFILE'
 export JAVA_HOME=$JAVA_HOME_IN
 export ANDROID_HOME=$SDK ANDROID_SDK_ROOT=$SDK
 export PATH=$T/adev-bin:$T/flutter/bin:$T/node/bin:$SDK/cmdline-tools/latest/bin:$SDK/platform-tools:\$PATH
@@ -319,7 +319,7 @@ set -e
 " || die "sdkmanager could not install the NDK or CMake"
     local major
     major=$(head -1 "$ROOTFS$SDK/ndk/$NDK_VERSION/toolchains/llvm/prebuilt/linux-x86_64/AndroidVersion.txt" 2>/dev/null | cut -d. -f1)
-    [ -n "$major" ] || major=$(cat "$ROOTFS$SDK/ndk/$NDK_VERSION/.antigem-llvm" 2>/dev/null)
+    [ -n "$major" ] || major=$(cat "$ROOTFS$SDK/ndk/$NDK_VERSION/.hina-llvm" 2>/dev/null)
     [ -n "$major" ] || die "Cannot read the NDK's LLVM version"
     say "Installing Ubuntu's arm64 LLVM $major (clang, lld, llvm tools), CMake and Ninja…"
     ubuntu_install "clang-$major" "lld-$major" "llvm-$major" cmake ninja-build
@@ -332,7 +332,7 @@ L=/usr/lib/llvm-$major/bin
 NR=\$(ls -d \$T/lib/clang/[0-9]* | head -1)
 [ -d \"\$NR/lib/linux\" ] || { echo \"No Android runtime libraries in \$NR\"; exit 1; }
 # clang's built-in headers (arm_neon.h…) must be the compiler's own; the Android runtime libraries are the NDK's
-R=\$T/lib/clang/antigem
+R=\$T/lib/clang/hina
 rm -rf \$R; mkdir -p \$R
 ln -s \$(ls -d /usr/lib/llvm-$major/lib/clang/*/include | head -1) \$R/include
 ln -s \$NR/lib \$R/lib
@@ -351,9 +351,9 @@ done
 rm -f \$T/bin/clang \$T/bin/clang++ \$T/bin/clang-[0-9]*
 # NDK clang finds its runtime libraries and sysroot next to itself and links with compiler-rt + libunwind; Ubuntu's
 # clang is told all of that (the link-only flags only when linking: RN compiles with -Werror)
-cat > /tmp/antigem-clang.in <<'WRAP'
+cat > /tmp/hina-clang.in <<'WRAP'
 #!/bin/sh
-# AntiGem (android-setup.sh ndk): Ubuntu's arm64 clang with this NDK's runtime libraries and sysroot
+# Agent Hina (android-setup.sh ndk): Ubuntu's arm64 clang with this NDK's runtime libraries and sysroot
 link=1
 for a in \"\$@\"; do case \"\$a\" in -c|-S|-E|-M|-MM|-fsyntax-only) link=0 ;; esac; done
 if [ \$link = 1 ]; then
@@ -362,15 +362,15 @@ fi
 exec @CC@ -resource-dir @RES@ --sysroot=@SYS@ \"\$@\"
 WRAP
 for c in clang clang++; do
-    sed -e \"s#@CC@#\$L/\$c#g\" -e \"s#@RES@#\$R#g\" -e \"s#@SYS@#\$T/sysroot#g\" /tmp/antigem-clang.in > \$T/bin/\$c
+    sed -e \"s#@CC@#\$L/\$c#g\" -e \"s#@RES@#\$R#g\" -e \"s#@SYS@#\$T/sysroot#g\" /tmp/hina-clang.in > \$T/bin/\$c
     chmod 755 \$T/bin/\$c
 done
-rm -f /tmp/antigem-clang.in
+rm -f /tmp/hina-clang.in
 ln -sf clang \$T/bin/clang-$major
 for t in ld ld.lld lld; do ln -sf \$L/ld.lld \$T/bin/\$t; done
 # x86-64 leftovers: host LLVM libraries, Python, musl, make, simpleperf
 rm -rf \$T/lib/lib*.so* \$T/lib/python3* \$T/python3 \$T/musl \$T/libexec \$N/prebuilt/linux-x86_64 \$N/simpleperf
-echo $major > \$N/.antigem-llvm
+echo $major > \$N/.hina-llvm
 # CMake: the SDK package Gradle asks for, running Ubuntu's arm64 cmake and ninja
 C=$SDK/cmake/$SDK_CMAKE/bin
 for t in cmake ctest cpack ninja; do rm -f \$C/\$t; done
@@ -430,9 +430,9 @@ for x in $T/flutter/bin/cache/artifacts/engine/*/linux-x64/gen_snapshot; do
     # an older setup renamed the binary: put it back
     if [ -f \"\$x.x86_64\" ]; then mv -f \"\$x.x86_64\" \"\$x\"; fi
     d=\"\$(dirname \"\$(dirname \"\$x\")\")/linux-arm64\"
-    [ -e \"\$d/gen_snapshot\" ] && ! grep -q AntiGem \"\$d/gen_snapshot\" 2>/dev/null && continue   # a real arm64 build: keep it
+    [ -e \"\$d/gen_snapshot\" ] && ! grep -q Agent Hina \"\$d/gen_snapshot\" 2>/dev/null && continue   # a real arm64 build: keep it
     mkdir -p \"\$d\"
-    printf '#!/bin/sh\\n# AntiGem (android-setup.sh flutter-release): the x86-64 gen_snapshot through qemu\\nexec $QEMU -L /usr/x86_64-linux-gnu %s \"\$@\"\\n' \"\$x\" > \"\$d/gen_snapshot\"
+    printf '#!/bin/sh\\n# Agent Hina (android-setup.sh flutter-release): the x86-64 gen_snapshot through qemu\\nexec $QEMU -L /usr/x86_64-linux-gnu %s \"\$@\"\\n' \"\$x\" > \"\$d/gen_snapshot\"
     chmod 755 \"\$d/gen_snapshot\"
     echo \"wrapped \${d#$T/flutter/bin/cache/artifacts/engine/}/gen_snapshot\"
 done
@@ -465,7 +465,7 @@ write_flutter_wrapper() {
 mkdir -p $T/adev-bin
 cat > $T/adev-bin/flutter <<'WRAP'
 #!/bin/bash
-# AntiGem (android-setup.sh flutter): Android builds on the phone are arm64-v8a only. ADEV_ALL_ABIS=1 turns it off.
+# Agent Hina (android-setup.sh flutter): Android builds on the phone are arm64-v8a only. ADEV_ALL_ABIS=1 turns it off.
 real=$T/flutter/bin/flutter
 if [ \"\${ADEV_ALL_ABIS:-}\" != 1 ] && [ \"\${1:-}\" = build ]; then
     case \"\${2:-}\" in
@@ -535,13 +535,13 @@ step_adb() {
             ln -sf /usr/bin/adb "$SDK/platform-tools/adb"
             ln -sf /usr/bin/fastboot "$SDK/platform-tools/fastboot"
         fi
-        ok "adb and fastboot installed (no sudo needed). Connect adb to this phone in AntiGem Settings → ADB Connect."
+        ok "adb and fastboot installed (no sudo needed). Connect adb to this phone in Agent Hina Settings → ADB Connect."
         return 0
     fi
     say "Installing adb (Termux android-tools) to install and debug apps on this phone…"
     termux_install android-tools
     [ -d "$ROOTFS$SDK/platform-tools" ] && ln -sf "$ADB" "$ROOTFS$SDK/platform-tools/adb"
-    ok "adb installed. Connect it to this phone in AntiGem Settings → ADB Connect."
+    ok "adb installed. Connect it to this phone in Agent Hina Settings → ADB Connect."
 }
 
 step_doctor() {
@@ -680,9 +680,9 @@ step_uninstall() {
     say "Removing the Android SDK, Flutter, the Gradle cache and the adev commands (the container, Java and Node.js stay)…"
     if [ "$RUNTIME" = chroot ]; then
         # the user's ~/.android stays: adb's pairing keys live there
-        inside "rm -rf $SDK $T/flutter $T/adev-bin $UH/.pub-cache $UH/.flutter $UH/.dart-tool $UH/.config/flutter $GH /etc/profile.d/antigem-android.sh; true"
+        inside "rm -rf $SDK $T/flutter $T/adev-bin $UH/.pub-cache $UH/.flutter $UH/.dart-tool $UH/.config/flutter $GH /etc/profile.d/hina-android.sh; true"
     elif has_container; then
-        inside "rm -rf $SDK $T/flutter $T/adev-bin /root/.pub-cache /root/.flutter $GH /root/.android /etc/profile.d/antigem-android.sh; true"
+        inside "rm -rf $SDK $T/flutter $T/adev-bin /root/.pub-cache /root/.flutter $GH /root/.android /etc/profile.d/hina-android.sh; true"
     fi
     rm -f "$BIN/adev" "$BIN/adev-new"
     rm -rf "$SHARE"
@@ -701,12 +701,12 @@ step_clean_cache() {
 
 usage() {
     cat <<EOF
-AntiGem Android development setup. In AntiGem's terminal the tools run in the proot-distro container '$C'
-($IMAGE), shared with REA; in AntiGem's Ubuntu chroot they run in the chroot itself (tools and the SDK in
-/opt/antigem, adev and adev-new in /usr/local/bin, Ubuntu's arm64 aapt2, adb, fastboot and qemu-user).
+Agent Hina Android development setup. In Agent Hina's terminal the tools run in the proot-distro container '$C'
+($IMAGE), shared with REA; in Agent Hina's Ubuntu chroot they run in the chroot itself (tools and the SDK in
+/opt/hina, adev and adev-new in /usr/local/bin, Ubuntu's arm64 aapt2, adb, fastboot and qemu-user).
 
 Usage: bash android-setup.sh STEP [STEP...]
-       sudo env ANTIGEM_RUNTIME=chroot bash android-setup.sh STEP [STEP...]   (in the Ubuntu chroot; AntiGem's Settings →
+       sudo env HINA_RUNTIME=chroot bash android-setup.sh STEP [STEP...]   (in the Ubuntu chroot; Agent Hina's Settings →
                                                                          Android Development does this for you)
 
 Groups of steps

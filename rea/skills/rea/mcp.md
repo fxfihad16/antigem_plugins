@@ -23,11 +23,11 @@ What it costs per request (REA 6.8.0, output schemas off):
 | Directly, groups core,android,flutter,device,native (61 tools) | ≈24k |
 | Directly, all 229 tools | ≈75k (≈900k with full output schemas) |
 
-On demand is the default for servers added in AntiGem. Directly saves the lookup step for small sets.
+On demand is the default for servers added in Agent Hina. Directly saves the lookup step for small sets.
 
 ## Tool groups
 
-Stored in `~/.config/antigem/rea/groups.json` (edited in Settings → REA → Tool groups):
+Stored in `~/.config/hina/rea/groups.json` (edited in Settings → REA → Tool groups):
 
 ```json
 { "version": 1, "groups": [
@@ -38,9 +38,9 @@ Stored in `~/.config/antigem/rea/groups.json` (edited in Settings → REA → To
 Built-in ids: `core` (basics, session status, evidence), `android` (JADX, apktool, signatures), `flutter`,
 `device` (adb), `native` (objdump, rizin, ELF/exports), `javascript` (JS bundles), `unity` (IL2CPP),
 `debug` (gdb, rizin debugger), `frida`, `firmware`, `network` (pcap), `apple` (iOS/macOS), `windows` (PE, .NET),
-`decompiler` (needs Ghidra/IDA/Hopper/Kuna, which AntiGem does not install; leave it off).
+`decompiler` (needs Ghidra/IDA/Hopper/Kuna, which Agent Hina does not install; leave it off).
 
-`~/.config/antigem/rea/tools.json` lists every tool REA has, with a short description and its size.
+`~/.config/hina/rea/tools.json` lists every tool REA has, with a short description and its size.
 
 When a call fails with "not in this server's tool groups" or "not available on this server", the tool is hidden. Tell the user to add its group to
 the server (the REA preset in that agent's MCP settings), or the tool to a group (Settings → REA → Tool
@@ -49,10 +49,10 @@ restart the server: changes apply on restart only.
 
 ## Adding the server
 
-- **In AntiGem, for any agent**: the **REA** preset in that agent's MCP settings (Antigravity → MCP Servers,
+- **In Agent Hina, for any agent**: the **REA** preset in that agent's MCP settings (Antigravity → MCP Servers,
   Claude Code → MCP, OpenCode → MCP servers). It asks for the mode and the tool groups and writes the agent's
   config; nothing has to be typed. The same agent can have several REA servers with different groups.
-- **By hand** (any agent, or outside AntiGem): a stdio server with the command
+- **By hand** (any agent, or outside Agent Hina): a stdio server with the command
   `/data/data/com.termux/files/usr/bin/rea-mcp` and the env above. Examples:
   - Antigravity (`~/.gemini/config/mcp_config.json`, under `mcpServers`):
 
@@ -81,7 +81,7 @@ After adding or changing the server, the agent needs a restart of the server or 
 command -v rea-mcp                 # the launcher is installed
 rea-mcp --doctor                   # REA starts; which engines are ready
 rea-mcp --list-tools | head -40    # REA's tools (all of them, ignoring groups)
-cat ~/.config/antigem/rea/groups.json | head -40
+cat ~/.config/hina/rea/groups.json | head -40
 ```
 
 `rea-mcp --doctor` reporting `unsupported_host` or `missing_analysis_engine` for Hopper, IDA, Ghidra or Kuna is

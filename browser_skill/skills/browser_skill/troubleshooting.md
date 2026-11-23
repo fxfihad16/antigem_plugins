@@ -51,4 +51,4 @@ What a tool's message means and what to do. The messages are quoted as the tools
 
 - In desktop view the full page width is shown, so text is small: use `action=zoom` on a region.
 - A screenshot shows only the visible area, not the whole page: scroll, or use `browser_get_page_text`.
-- Overlays drawn by AntiGem (cursor, caption, lock button) never appear in screenshots.
+- Overlays drawn by Agent Hina (cursor, caption, lock button) never appear in screenshots.

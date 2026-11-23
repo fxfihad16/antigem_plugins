@@ -240,7 +240,7 @@
   {
    "id": "decompiler",
    "name": "Decompiler session",
-   "description": "Functions, pseudo-code, strings, cross references and annotations of an opened binary. Needs a decompiler engine (Ghidra, IDA, Hopper or Kuna), which AntiGem does not install.",
+   "description": "Functions, pseudo-code, strings, cross references and annotations of an opened binary. Needs a decompiler engine (Ghidra, IDA, Hopper or Kuna), which Agent Hina does not install.",
    "builtin": true,
    "tools": [
     "address_name",

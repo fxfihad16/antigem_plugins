@@ -42,7 +42,7 @@ Rules:
 
 `preview_video project_id=… quality=480p|720p` returns a `markdown` line like
 `![▶ My video (preview)](http://127.0.0.1:8766/preview/pv_…/index.m3u8)`. Post that line **on its own line**
-in your answer. AntiGem shows it as a video the user plays right in the chat, with sound, **without exporting**:
+in your answer. Agent Hina shows it as a video the user plays right in the chat, with sound, **without exporting**:
 - **It plays within seconds.** It's a stream (`.m3u8`): the first seconds render the moment you call the tool,
   and after that the phone renders just ahead of what the user is watching. The user sees the full length and
   can seek; seeking renders from the new spot in about a second.

@@ -1,6 +1,6 @@
 ---
 name: Android development on the phone
-description: Create, build and install Android apps on this phone (Kotlin / Java with Jetpack Compose, Flutter, React Native) with Gradle, the Android SDK and Flutter in AntiGem's proot-distro Ubuntu container; check the setup first, and set it up or tell the user how when it is missing.
+description: Create, build and install Android apps on this phone (Kotlin / Java with Jetpack Compose, Flutter, React Native) with Gradle, the Android SDK and Flutter in Agent Hina's proot-distro Ubuntu container; check the setup first, and set it up or tell the user how when it is missing.
 ---
 
 # Android development on the phone
@@ -10,7 +10,7 @@ tools are made for x86-64 PCs, and this setup works around that in specific ways
 rules given here and in the detail files, instead of what you would normally do on a PC, and read the matching
 detail file before you start a task it covers.
 
-AntiGem builds Android apps on the phone itself. Gradle, the Android SDK, Flutter and Node.js live in a
+Agent Hina builds Android apps on the phone itself. Gradle, the Android SDK, Flutter and Node.js live in a
 proot-distro Ubuntu 24.04 container named `ubuntu` (the same one REA uses); you reach them from the terminal with
 two commands:
 
@@ -23,8 +23,8 @@ two commands:
 Edit the project files directly with your normal file tools (they are in the Termux home); only builds, `flutter`,
 `npm` and `npx` need `adev`.
 
-**In AntiGem's Ubuntu chroot** (rooted phones; you are in a normal Ubuntu, without `$PREFIX`): there is no
-container. The tools live in `/opt/antigem` and the same two commands (`/usr/local/bin/adev`, `adev-new`) run them
+**In Agent Hina's Ubuntu chroot** (rooted phones; you are in a normal Ubuntu, without `$PREFIX`): there is no
+container. The tools live in `/opt/hina` and the same two commands (`/usr/local/bin/adev`, `adev-new`) run them
 right there, with Ubuntu's own `aapt2`, `adb` and `fastboot` (no sudo needed). Projects go in `~/AndroidProjects`
 (any folder of your home works, not /sdcard). `setup.md` has the details.
 
@@ -49,7 +49,7 @@ Detail files (read with `get_skill_file`, name `android-dev`):
 
 ## 1. Check the setup before anything else
 
-Run `bash $PREFIX/share/antigem-android/android-setup.sh status` (it prints `key=yes|no` lines):
+Run `bash $PREFIX/share/hina-android/android-setup.sh status` (it prints `key=yes|no` lines):
 
 | Line | Needed for |
 | --- | --- |
@@ -114,10 +114,10 @@ first build may need SDK platforms it targets; Gradle downloads them by itself (
   Then clean the smallest thing that fixes it (one module's `build/`, not Gradle's whole cache), and tell the user
   why.
 
-## 5. Keep the project's run commands in `.antigem/run.json`
+## 5. Keep the project's run commands in `.hina/run.json`
 
-The user builds and runs apps without the terminal from AntiGem's **Run panel** (and the IDE's Run button). Both
-read the project's `.antigem/run.json`; `adev-new` writes one for every project it creates. Keep it in step:
+The user builds and runs apps without the terminal from Agent Hina's **Run panel** (and the IDE's Run button). Both
+read the project's `.hina/run.json`; `adev-new` writes one for every project it creates. Keep it in step:
 
 - A project without one (cloned, made by hand): create it with the commands below for its kind.
 - You change how the app is built, installed or started (a new flavor, a package name, Metro's port, a script):

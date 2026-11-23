@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-// AntiGem · REA tool filter. Starts `rea mcp` and passes the MCP stdio through, limiting what the agent sees.
+// Agent Hina · REA tool filter. Starts `rea mcp` and passes the MCP stdio through, limiting what the agent sees.
 //
-// Which tools the agent may use: REA_GROUPS, comma separated group ids from REA_GROUPS_FILE (edited in AntiGem's
+// Which tools the agent may use: REA_GROUPS, comma separated group ids from REA_GROUPS_FILE (edited in Agent Hina's
 // Settings → REA → Tool groups); empty or "all" allows every tool.
 //
 // How the agent sees them: REA_MODE
@@ -16,13 +16,13 @@
 //                                     it changes things, and the bytes its definition adds to the context) as JSON
 //   node rea-filter.mjs --doctor      run `rea doctor`
 //
-// Source: antigem_plugins/rea/skills/rea/scripts/. AntiGem's Settings → REA downloads this folder into
-// $PREFIX/share/antigem-rea/; the REA skill plugin carries the same files.
+// Source: antigem_plugins/rea/skills/rea/scripts/. Agent Hina's Settings → REA downloads this folder into
+// $PREFIX/share/hina-rea/; the REA skill plugin carries the same files.
 import { spawn } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { createInterface } from "node:readline";
 
-const GROUPS_FILE = process.env.REA_GROUPS_FILE || "/data/data/com.termux/files/home/.config/antigem/rea/groups.json";
+const GROUPS_FILE = process.env.REA_GROUPS_FILE || "/data/data/com.termux/files/home/.config/hina/rea/groups.json";
 const MODE = (process.env.REA_MODE || "direct").trim().toLowerCase() === "lazy" ? "lazy" : "direct";
 const GATEWAYS = new Set(["rea_tools", "rea_tool_info", "rea_call", "rea_call_change"]);
 const CHANGE_MARK = "✎";
@@ -188,7 +188,7 @@ function infoText(tools, args) {
 function startRea(args) {
   const child = spawn("rea", args, { stdio: ["pipe", "pipe", "inherit"] });
   child.on("error", (e) => {
-    process.stderr.write(`rea-filter: cannot start rea (${e.message}). Install REA in AntiGem Settings → REA.\n`);
+    process.stderr.write(`rea-filter: cannot start rea (${e.message}). Install REA in Agent Hina Settings → REA.\n`);
     process.exit(127);
   });
   return child;
@@ -266,7 +266,7 @@ function serve() {
         const tool = tools.find((t) => t.name === target);
         if (!tool) {
           return toolError(message.id, `REA tool ${target} is not available on this server (${label}). ` +
-            "It may be outside this server's tool groups: AntiGem Settings → REA → Tool groups, or choose more groups for the server. See rea_tools.");
+            "It may be outside this server's tool groups: Agent Hina Settings → REA → Tool groups, or choose more groups for the server. See rea_tools.");
         }
         if (name === "rea_call" && changesThings(tool)) return toolError(message.id, `${target} changes things: run it with rea_call_change.`);
         if (name === "rea_call_change" && !changesThings(tool)) return toolError(message.id, `${target} does not change anything: run it with rea_call.`);
@@ -300,7 +300,7 @@ function serve() {
         if (MODE === "lazy" && GATEWAYS.has(name)) return void gateway(message);
         if (!allowed(name)) {
           return toolError(message.id, `REA tool ${name} is not in this server's tool groups (${label}). ` +
-            "Add it to a group in AntiGem Settings → REA → Tool groups, or choose more groups for this MCP server, then restart the server.");
+            "Add it to a group in Agent Hina Settings → REA → Tool groups, or choose more groups for this MCP server, then restart the server.");
         }
       }
       child.stdin.write(line + "\n");
@@ -380,7 +380,7 @@ async function listTools() {
     const init = await call("initialize", {
       protocolVersion: "2025-06-18",
       capabilities: {},
-      clientInfo: { name: "antigem-rea", version: "1" }
+      clientInfo: { name: "hina-rea", version: "1" }
     });
     child.stdin.write(JSON.stringify({ jsonrpc: "2.0", method: "notifications/initialized" }) + "\n");
     const tools = [];

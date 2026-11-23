@@ -34,9 +34,9 @@ If the tools are missing or every call fails to connect, stop and tell the user 
 
 1. ClipPolish → home → **Let your AI edit your videos → Connect** (or Settings → AI access).
 2. Switch **MCP server** on. It listens on this phone only (`127.0.0.1`); a Wi-Fi option exists only in debug builds.
-3. AntiGem often holds port 8765 already. If the server does not start, or another app answers on 8765, set the
+3. Agent Hina often holds port 8765 already. If the server does not start, or another app answers on 8765, set the
    **Port** to 8766.
-4. Copy the URL (`http://127.0.0.1:<port>/mcp`) and the key from that screen. In AntiGem → Settings → the
+4. Copy the URL (`http://127.0.0.1:<port>/mcp`) and the key from that screen. In Agent Hina → Settings → the
    agent's MCP page, add an HTTP server named `clippolish` with that URL and the header
    `Authorization: Bearer <key>`. The screen also has a ready "Claude Code" command and a JSON config to copy.
 5. Reload the tools or start a new chat.

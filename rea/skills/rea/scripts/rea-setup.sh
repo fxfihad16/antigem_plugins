@@ -1,39 +1,39 @@
 #!/data/data/com.termux/files/usr/bin/bash
-# AntiGem · REA (Reverse Engineer Anything, github.com/morluto/rea) setup for Termux + proot-distro Ubuntu.
-# AntiGem's Settings → REA runs these steps; you (or an agent) can run them in the terminal too.
+# Agent Hina · REA (Reverse Engineer Anything, github.com/morluto/rea) setup for Termux + proot-distro Ubuntu.
+# Agent Hina's Settings → REA runs these steps; you (or an agent) can run them in the terminal too.
 #
 #   bash rea-setup.sh help                 list the steps
 #   bash rea-setup.sh android              everything needed to analyze APKs (recommended)
 #   bash rea-setup.sh container base java  any steps, in the order given
 #
-# Source: antigem_plugins/rea/skills/rea/scripts/ (AntiGem downloads this folder into $PREFIX/share/antigem-rea/).
+# Source: antigem_plugins/rea/skills/rea/scripts/ (Agent Hina downloads this folder into $PREFIX/share/hina-rea/).
 set -uo pipefail
 
 say() { printf '==> %s\n' "$*"; }
 ok() { printf '✓ %s\n' "$*"; }
 die() { printf '✗ %s\n' "$*" >&2; exit 1; }
 
-# Where REA runs. In AntiGem's terminal (Termux): a proot-distro Ubuntu container. In AntiGem's Ubuntu chroot (rooted
-# phones): that Ubuntu itself, no container. There AntiGem runs this script inside the chroot as root with
-# ANTIGEM_RUNTIME=chroot and ANTIGEM_USER=<the chroot's user>: the tools go to /opt/antigem (every user can run them),
-# the launchers to /usr/local/bin and the tool groups to the user's ~/.config/antigem/rea.
-RUNTIME="${ANTIGEM_RUNTIME:-termux}"
+# Where REA runs. In Agent Hina's terminal (Termux): a proot-distro Ubuntu container. In Agent Hina's Ubuntu chroot (rooted
+# phones): that Ubuntu itself, no container. There Agent Hina runs this script inside the chroot as root with
+# HINA_RUNTIME=chroot and HINA_USER=<the chroot's user>: the tools go to /opt/hina (every user can run them),
+# the launchers to /usr/local/bin and the tool groups to the user's ~/.config/hina/rea.
+RUNTIME="${HINA_RUNTIME:-termux}"
 C="${REA_CONTAINER:-ubuntu}"
 IMAGE="${REA_IMAGE:-ubuntu:24.04}"
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 if [ "$RUNTIME" = chroot ]; then
-    [ "$(id -u)" = 0 ] || die "In the Ubuntu chroot this script runs as root: sudo env ANTIGEM_RUNTIME=chroot bash $0 ${*:-help}"
-    U="${ANTIGEM_USER:-${SUDO_USER:-}}"
+    [ "$(id -u)" = 0 ] || die "In the Ubuntu chroot this script runs as root: sudo env HINA_RUNTIME=chroot bash $0 ${*:-help}"
+    U="${HINA_USER:-${SUDO_USER:-}}"
     UH=""
     [ -n "$U" ] && UH=$(getent passwd "$U" | cut -d: -f6)
     [ -n "$UH" ] || { U=""; UH=/root; }
     export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin DEBIAN_FRONTEND=noninteractive
     ROOTFS=""
-    T=/opt/antigem/tools
-    NVM_HOME=/opt/antigem/nvm
-    SHARE=/opt/antigem/share/antigem-rea
+    T=/opt/hina/tools
+    NVM_HOME=/opt/hina/nvm
+    SHARE=/opt/hina/share/hina-rea
     BIN=/usr/local/bin
-    CONF="$UH/.config/antigem/rea"
+    CONF="$UH/.config/hina/rea"
 else
     P=/data/data/com.termux/files/usr
     H=/data/data/com.termux/files/home
@@ -41,9 +41,9 @@ else
     ROOTFS="$P/var/lib/proot-distro/containers/$C/rootfs"
     T=/root/tools
     NVM_HOME=/root/.nvm
-    SHARE="$P/share/antigem-rea"
+    SHARE="$P/share/hina-rea"
     BIN="$P/bin"
-    CONF="$H/.config/antigem/rea"
+    CONF="$H/.config/hina/rea"
 fi
 NODE_MAJOR=24
 NVM_VERSION=v0.40.3
@@ -105,7 +105,7 @@ need_in() { # need_in <path inside the container> <step that provides it>
 
 step_container() {
     if [ "$RUNTIME" = chroot ]; then
-        ok "REA installs straight into AntiGem's Ubuntu chroot: $(grep -m1 '^PRETTY_NAME=' /etc/os-release 2>/dev/null | cut -d'"' -f2)"
+        ok "REA installs straight into Agent Hina's Ubuntu chroot: $(grep -m1 '^PRETTY_NAME=' /etc/os-release 2>/dev/null | cut -d'"' -f2)"
         return 0
     fi
     command -v proot-distro >/dev/null 2>&1 || termux_install proot-distro
@@ -235,12 +235,12 @@ step_adb() {
     if [ "$RUNTIME" = chroot ]; then
         say "Installing adb and fastboot (Ubuntu's packages)…"
         ubuntu_install adb fastboot
-        ok "adb and fastboot installed. Connect adb to this phone in AntiGem Settings → ADB Connect."
+        ok "adb and fastboot installed. Connect adb to this phone in Agent Hina Settings → ADB Connect."
         return 0
     fi
     say "Installing adb (Termux android-tools)…"
     termux_install android-tools
-    ok "adb installed. Connect it to this phone in AntiGem Settings → ADB Connect."
+    ok "adb installed. Connect it to this phone in Agent Hina Settings → ADB Connect."
 }
 
 step_hermes() {
@@ -368,7 +368,7 @@ step_uninstall() {
 }
 
 step_remove_container() {
-    [ "$RUNTIME" = chroot ] && die "This is AntiGem's Ubuntu chroot, not a container: delete it in AntiGem Settings → Where agents run → Ubuntu chroot."
+    [ "$RUNTIME" = chroot ] && die "This is Agent Hina's Ubuntu chroot, not a container: delete it in Agent Hina Settings → Where agents run → Ubuntu chroot."
     say "Deleting the '$C' container and everything in it…"
     yes | proot-distro remove "$C" || die "proot-distro could not remove '$C'"
     rm -f "$BIN/rea-mcp" "$BIN/rea-shell"
@@ -377,11 +377,11 @@ step_remove_container() {
 
 usage() {
     cat <<EOF
-AntiGem REA setup. In AntiGem's terminal REA runs in the proot-distro container '$C' ($IMAGE); in AntiGem's
-Ubuntu chroot it runs in the chroot itself (tools in /opt/antigem, launchers in /usr/local/bin).
+Agent Hina REA setup. In Agent Hina's terminal REA runs in the proot-distro container '$C' ($IMAGE); in Agent Hina's
+Ubuntu chroot it runs in the chroot itself (tools in /opt/hina, launchers in /usr/local/bin).
 
 Usage: bash rea-setup.sh STEP [STEP...]
-       sudo env ANTIGEM_RUNTIME=chroot bash rea-setup.sh STEP [STEP...]   (in the Ubuntu chroot; AntiGem's Settings → REA
+       sudo env HINA_RUNTIME=chroot bash rea-setup.sh STEP [STEP...]   (in the Ubuntu chroot; Agent Hina's Settings → REA
                                                                      does this for you)
 
 Groups of steps
@@ -404,7 +404,7 @@ Steps (each can be rerun to repair or update)
   firmware    binwalk
 
 Other
-  tools       refresh ~/.config/antigem/rea/tools.json (REA's tool list)
+  tools       refresh ~/.config/hina/rea/tools.json (REA's tool list)
   doctor      rea doctor: which tools and engines are ready
   status      show what is installed
   uninstall   remove REA, its jars and the launcher (keeps the container)
